@@ -50,7 +50,11 @@ class DashboardController {
             exit;
         }
         
+        $studentModel = new Student();
+        $stats = $studentModel->getStudentStats($_SESSION['user_id']);
         $upcomingPresentations = $this->presentationModel->getUpcomingPresentationsForStudent($_SESSION['user_id']);
+        $pastPresentations = $studentModel->getPastPresentations($_SESSION['user_id']);
+        $suggestedSubjects = $this->subjectModel->getSubjectsByStudent($_SESSION['user_id']);
         
         require APP_PATH . '/app/views/dashboard/student.php';
     }

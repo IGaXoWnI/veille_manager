@@ -32,6 +32,12 @@ class Router {
         'GET|/user-management' => ['UserManagementController', 'index'],
         'POST|/user-management/approve' => ['UserManagementController', 'approveUser'],
         'POST|/user-management/delete' => ['UserManagementController', 'deleteUser'],
+
+        // Student-specific routes
+        'GET|/subjects/my-suggestions' => ['SubjectController', 'mySubjects'],
+        'GET|/dashboard/student/stats' => ['DashboardController', 'studentStats'],
+        'GET|/notifications' => ['NotificationController', 'index'],
+        'POST|/notifications/mark-read' => ['NotificationController', 'markAsRead']
     ];
 
     private $publicRoutes = [
