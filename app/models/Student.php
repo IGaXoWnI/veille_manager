@@ -1,5 +1,9 @@
 <?php
 class Student extends User {
+    protected $total_presentations;
+    protected $total_suggestions;
+    protected $last_presentation_date;
+
     public function getUpcomingPresentations($studentId) {
         $stmt = $this->db->prepare(
             "SELECT p.*, s.title as subject_title, s.description as subject_description

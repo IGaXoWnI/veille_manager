@@ -1,6 +1,14 @@
 <?php
 class User {
     protected $db;
+    protected $id;
+    protected $email;
+    protected $password;
+    protected $first_name;
+    protected $last_name;
+    protected $role;
+    protected $created_at;
+    protected $updated_at;
 
     public function __construct() {
         $this->db = Database::getInstance()->getConnection();

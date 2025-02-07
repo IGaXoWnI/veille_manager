@@ -1,6 +1,13 @@
 <?php
 class Presentation {
     private $db;
+    private $id;
+    private $subject_id;
+    private $scheduled_date;
+    private $status;
+    private $created_at;
+    private $updated_at;
+    private $notes;
 
     public function __construct() {
         $this->db = Database::getInstance()->getConnection();

@@ -1,6 +1,13 @@
 <?php
 class Subject {
     private $db;
+    private $id;
+    private $title;
+    private $description;
+    private $suggested_by;
+    private $status;
+    private $created_at;
+    private $updated_at;
 
     public function __construct() {
         $this->db = Database::getInstance()->getConnection();
