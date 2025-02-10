@@ -3,6 +3,7 @@ class DashboardController {
     private $userModel;
     private $presentationModel;
     private $subjectModel;
+    private $statisticsModel;
 
     public function __construct() {
         if (!isset($_SESSION['user_id'])) {
@@ -13,6 +14,7 @@ class DashboardController {
         $this->userModel = new User();
         $this->presentationModel = new Presentation();
         $this->subjectModel = new Subject();
+        $this->statisticsModel = new Statistics();
     }
 
     public function index() {
@@ -30,17 +32,19 @@ class DashboardController {
             exit;
         }
 
-        $subjectModel = new Subject();
-        $presentationModel = new Presentation();
-        $userModel = new User();
-
-        $pendingSubjects = $subjectModel->getPendingSubjects();
-        $approvedSubjectsCount = $subjectModel->getApprovedSubjectsCount();
-        $todayPresentations = $presentationModel->getTodayPresentationsCount();
-        $upcomingPresentations = $presentationModel->getUpcomingPresentationsCount();
-        $totalPresentations = $presentationModel->getTotalPresentationsCount();
-        $totalStudents = $userModel->getActiveStudentsCount();
-
+        $teacherModel = new Teacher();
+        $stats = $this->statisticsModel->getTeacherDashboardStats();
+        $pendingSubjects = $teacherModel->getPendingSubjects();
+        
+        // Extract all variables needed by the view
+        $todayPresentations = $stats['todayPresentations'];
+        $pendingSubjectsCount = $stats['pendingSubjectsCount'];
+        $approvedSubjectsCount = $stats['approvedSubjectsCount'];
+        $todayPresentationsCount = (int)$stats['todayPresentationsCount'];
+        $upcomingPresentationsCount = $stats['upcomingPresentationsCount'];
+        $totalPresentationsCount = $stats['totalPresentationsCount'];
+        $totalStudentsCount = $stats['totalStudentsCount'];
+        
         require APP_PATH . '/app/views/dashboard/teacher.php';
     }
 
@@ -51,7 +55,7 @@ class DashboardController {
         }
         
         $studentModel = new Student();
-        $stats = $studentModel->getStudentStats($_SESSION['user_id']);
+        $stats = $this->statisticsModel->getStudentDashboardStats($_SESSION['user_id']);
         $upcomingPresentations = $this->presentationModel->getUpcomingPresentationsForStudent($_SESSION['user_id']);
         $pastPresentations = $studentModel->getPastPresentations($_SESSION['user_id']);
         $suggestedSubjects = $this->subjectModel->getSubjectsByStudent($_SESSION['user_id']);

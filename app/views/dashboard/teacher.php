@@ -34,7 +34,7 @@ ob_start();
                 <div>
                     <p class="text-sm font-medium text-gray-500">Today's Presentations</p>
                     <p class="text-2xl font-bold text-emerald-600 mt-1">
-                        <?php echo $todayPresentations; ?>
+                        <?php echo $todayPresentationsCount; ?>
                     </p>
                 </div>
                 <div class="bg-emerald-50 p-3 rounded-lg">
@@ -43,7 +43,7 @@ ob_start();
                     </svg>
                 </div>
             </div>
-            <p class="text-sm text-gray-600 mt-2">Upcoming: <?php echo $upcomingPresentations; ?></p>
+            <p class="text-sm text-gray-600 mt-2">Upcoming: <?php echo $upcomingPresentationsCount; ?></p>
         </div>
 
         <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition-all">
@@ -51,7 +51,7 @@ ob_start();
                 <div>
                     <p class="text-sm font-medium text-gray-500">Total Students</p>
                     <p class="text-2xl font-bold text-violet-600 mt-1">
-                        <?php echo $totalStudents; ?>
+                        <?php echo $totalStudentsCount; ?>
                     </p>
                 </div>
                 <div class="bg-violet-50 p-3 rounded-lg">
@@ -67,7 +67,7 @@ ob_start();
                 <div>
                     <p class="text-sm font-medium text-gray-500">Total Presentations</p>
                     <p class="text-2xl font-bold text-blue-600 mt-1">
-                        <?php echo $totalPresentations; ?>
+                        <?php echo $totalPresentationsCount; ?>
                     </p>
                 </div>
                 <div class="bg-blue-50 p-3 rounded-lg">
@@ -76,7 +76,7 @@ ob_start();
                     </svg>
                 </div>
             </div>
-            <p class="text-sm text-gray-600 mt-2">Active: <?php echo $upcomingPresentations; ?></p>
+            <p class="text-sm text-gray-600 mt-2">Active: <?php echo $upcomingPresentationsCount; ?></p>
         </div>
     </div>
 
