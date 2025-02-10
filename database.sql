@@ -57,11 +57,3 @@ CREATE TABLE notifications (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE statistics (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id),
-    presentations_given INTEGER DEFAULT 0,
-    subjects_suggested INTEGER DEFAULT 0,
-    last_presentation_date TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
