@@ -35,15 +35,22 @@ class Statistics {
 
     public function getStudentDashboardStats($studentId) {
         try {
+            $totalPresentations = $this->getStudentTotalPresentations($studentId);
+            $totalSuggestions = $this->getStudentSuggestedSubjects($studentId);
+            $lastPresentationDate = $this->getStudentLastPresentationDate($studentId);
+
             return [
-                'totalPresentations' => $this->getStudentTotalPresentations($studentId),
-                'upcomingPresentations' => $this->getStudentUpcomingPresentations($studentId),
-                'completedPresentations' => $this->getStudentCompletedPresentations($studentId),
-                'suggestedSubjects' => $this->getStudentSuggestedSubjects($studentId)
+                'total_presentations' => $totalPresentations,
+                'total_suggestions' => $totalSuggestions,
+                'last_presentation_date' => $lastPresentationDate
             ];
         } catch (PDOException $e) {
             error_log("Error getting student dashboard stats: " . $e->getMessage());
-            return null;
+            return [
+                'total_presentations' => 0,
+                'total_suggestions' => 0,
+                'last_presentation_date' => null
+            ];
         }
     }
 
@@ -120,51 +127,57 @@ class Statistics {
         }
     }
 
+    private function getStudentLastPresentationDate($studentId) {
+        try {
+            $query = "
+                SELECT MAX(p.scheduled_date) as last_date
+                FROM student_presentations sp
+                JOIN presentations p ON sp.presentation_id = p.id
+                WHERE sp.student_id = :student_id
+                AND p.scheduled_date <= CURRENT_DATE
+                AND p.status = 'completed'::presentation_status
+            ";
+            
+            $stmt = $this->db->prepare($query);
+            $stmt->execute(['student_id' => $studentId]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['last_date'];
+        } catch (PDOException $e) {
+            error_log("Error getting student's last presentation date: " . $e->getMessage());
+            return null;
+        }
+    }
+
     private function getStudentTotalPresentations($studentId) {
-        $query = "
-            SELECT COUNT(*) as count 
-            FROM student_presentations 
-            WHERE student_id = :student_id
-        ";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute(['student_id' => $studentId]);
-        return $stmt->fetch(PDO::FETCH_ASSOC)['count'];
-    }
-
-    private function getStudentUpcomingPresentations($studentId) {
-        $query = "
-            SELECT COUNT(*) as count 
-            FROM student_presentations sp
-            JOIN presentations p ON sp.presentation_id = p.id
-            WHERE sp.student_id = :student_id 
-            AND p.scheduled_date > CURRENT_DATE
-        ";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute(['student_id' => $studentId]);
-        return $stmt->fetch(PDO::FETCH_ASSOC)['count'];
-    }
-
-    private function getStudentCompletedPresentations($studentId) {
-        $query = "
-            SELECT COUNT(*) as count 
-            FROM student_presentations sp
-            JOIN presentations p ON sp.presentation_id = p.id
-            WHERE sp.student_id = :student_id 
-            AND p.scheduled_date < CURRENT_DATE
-        ";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute(['student_id' => $studentId]);
-        return $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+        try {
+            $query = "
+                SELECT COUNT(*) as count 
+                FROM student_presentations sp
+                JOIN presentations p ON sp.presentation_id = p.id
+                WHERE sp.student_id = :student_id
+            ";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute(['student_id' => $studentId]);
+            return $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+        } catch (PDOException $e) {
+            error_log("Error getting student's total presentations: " . $e->getMessage());
+            return 0;
+        }
     }
 
     private function getStudentSuggestedSubjects($studentId) {
-        $query = "
-            SELECT COUNT(*) as count 
-            FROM subjects 
-            WHERE suggested_by = :student_id
-        ";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute(['student_id' => $studentId]);
-        return $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+        try {
+            $query = "
+                SELECT COUNT(*) as count 
+                FROM subjects 
+                WHERE suggested_by = :student_id
+            ";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute(['student_id' => $studentId]);
+            return $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+        } catch (PDOException $e) {
+            error_log("Error getting student's suggested subjects: " . $e->getMessage());
+            return 0;
+        }
     }
 } 
